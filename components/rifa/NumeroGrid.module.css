@@ -1,0 +1,78 @@
+/* components/rifa/NumeroGrid.module.css */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+  gap: 8px;
+  padding: 4px;
+}
+
+.num {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Outfit', monospace;
+  border: 1.5px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.75);
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.4,0,0.2,1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.num::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-primary, #1a237e);
+  opacity: 0;
+  transition: opacity 0.18s;
+}
+
+.num:not(:disabled):hover {
+  border-color: var(--color-acento, #ffd700);
+  color: var(--color-acento, #ffd700);
+  background: rgba(255,215,0,0.06);
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Selected */
+.seleccionado {
+  background: var(--color-primary, #1a237e) !important;
+  border-color: var(--color-acento, #ffd700) !important;
+  color: white !important;
+  transform: scale(1.12) !important;
+  box-shadow: 0 0 0 2px var(--color-acento, #ffd700), 0 4px 16px rgba(0,0,0,0.4) !important;
+  animation: pop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes pop {
+  from { transform: scale(0.9); }
+  to { transform: scale(1.12); }
+}
+
+/* Sold */
+.vendido {
+  background: rgba(255,255,255,0.03) !important;
+  border-color: rgba(255,255,255,0.04) !important;
+  color: rgba(255,255,255,0.18) !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  position: relative;
+}
+
+.vendido::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  height: 1.5px;
+  background: rgba(255,255,255,0.12);
+  transform: rotate(-35deg);
+}

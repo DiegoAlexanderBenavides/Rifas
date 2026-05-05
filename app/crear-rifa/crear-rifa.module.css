@@ -1,0 +1,277 @@
+/* app/crear-rifa/crear-rifa.module.css */
+.wrapper {
+  padding: 40px 20px 80px;
+  max-width: 800px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: rgba(255,255,255,0.5);
+}
+
+.content {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 24px;
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+@media (max-width: 600px) { .content { padding: 20px; } }
+
+.stepContent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.stepTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.stepDesc {
+  color: rgba(255,255,255,0.5);
+  font-size: 15px;
+  margin-top: -16px;
+}
+
+/* Plantillas grid */
+.plantillasGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 700px) { .plantillasGrid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 440px) { .plantillasGrid { grid-template-columns: 1fr 1fr; } }
+
+/* Form grid */
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) { .formGrid { grid-template-columns: 1fr; } }
+
+/* Cantidades */
+.cantidadesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 500px) { .cantidadesGrid { grid-template-columns: repeat(2, 1fr); } }
+
+.cantidadCard {
+  background: rgba(255,255,255,0.04);
+  border: 2px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 20px 12px;
+  cursor: pointer;
+  transition: all 0.25s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.cantidadCard:hover {
+  border-color: rgba(255,215,0,0.3);
+  background: rgba(255,215,0,0.04);
+  transform: translateY(-3px);
+}
+
+.cantidadSelected {
+  border-color: #ffd700 !important;
+  background: rgba(255,215,0,0.08) !important;
+  box-shadow: 0 0 0 3px rgba(255,215,0,0.15);
+  transform: translateY(-3px);
+}
+
+.cantidadNum {
+  font-size: 2rem;
+  font-weight: 900;
+  color: white;
+  line-height: 1;
+}
+
+.cantidadSelected .cantidadNum {
+  color: #ffd700;
+}
+
+.cantidadLabel {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  font-weight: 500;
+}
+
+.cantidadIngresos {
+  margin-top: 4px;
+  font-size: 11px;
+  color: rgba(0, 200, 83, 0.8);
+  font-weight: 600;
+  background: rgba(0,200,83,0.08);
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+/* Cantidad preview mini-grid */
+.cantidadPreview {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.cantidadPreviewGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.cantidadPreviewNum {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.7);
+  font-family: monospace;
+  opacity: 0.6;
+}
+
+.cantidadPreviewMore {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 600;
+  padding: 4px 8px;
+}
+
+/* Preview step */
+.preview {
+  border-radius: 20px;
+  padding: 40px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.preview::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.2);
+  pointer-events: none;
+}
+
+.previewEmoji {
+  font-size: 56px;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+}
+
+.previewNombre {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: white;
+  position: relative;
+  z-index: 1;
+}
+
+.previewPremio {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.85);
+  position: relative;
+  z-index: 1;
+}
+
+.previewBadges {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.previewBadges span {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 13px;
+  color: white;
+  font-weight: 500;
+}
+
+.previewPlantilla {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  position: relative;
+  z-index: 1;
+  background: rgba(0,0,0,0.2);
+  padding: 4px 12px;
+  border-radius: 100px;
+}
+
+/* Ingreso estimado */
+.ingresoEstimado {
+  margin-top: -4px;
+}
+
+.ingresoCard {
+  background: rgba(0,200,83,0.06);
+  border: 1px solid rgba(0,200,83,0.2);
+  border-radius: 16px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 24px;
+}
+
+.ingresoTitle {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.ingresoValue {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #69f0ae;
+}
+
+/* Nav buttons */
+.navButtons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}

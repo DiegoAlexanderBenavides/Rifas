@@ -1,0 +1,428 @@
+/* app/rifa/[id]/admin/admin.module.css */
+.admin {
+  padding: 40px 20px 80px;
+}
+
+/* Nueva rifa alert */
+.nuevaAlert {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: linear-gradient(135deg, rgba(0,200,83,0.1), rgba(0,200,83,0.05));
+  border: 1px solid rgba(0,200,83,0.3);
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin-bottom: 28px;
+  animation: slideDown 0.4s ease;
+  font-size: 15px;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.nuevaAlert > span { font-size: 28px; }
+
+.nuevaAlert strong { color: #69f0ae; display: block; margin-bottom: 4px; }
+.nuevaAlert p { font-size: 13px; color: rgba(255,255,255,0.55); margin: 0; }
+
+.nuevaClose {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+.nuevaClose:hover { color: white; }
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.headerEmoji {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.title {
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.headerMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.headerPlantilla {
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.04);
+  padding: 3px 10px;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+.headerActions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Share card */
+.shareCard {
+  background: rgba(255,215,0,0.04);
+  border: 1px solid rgba(255,215,0,0.15);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.shareLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffd700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.shareRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.shareUrl {
+  flex: 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.copyBtn { flex-shrink: 0; }
+
+/* Stats grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 900px) { .statsGrid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .statsGrid { grid-template-columns: 1fr 1fr; } }
+
+.statCard {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px;
+  padding: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transition: all 0.25s;
+}
+
+.statCard:hover { border-color: rgba(255,215,0,0.15); }
+
+.statIcon { font-size: 24px; flex-shrink: 0; }
+
+.statInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.statValue {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: white;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statProgress {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.statPct {
+  font-size: 11px;
+  color: rgba(255,215,0,0.7);
+  font-weight: 600;
+}
+
+/* Ganador banner */
+.ganadorBanner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,152,0,0.08));
+  border: 1px solid rgba(255,215,0,0.25);
+  border-radius: 18px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+
+.ganadorTrophy { font-size: 40px; }
+
+.ganadorTitle {
+  font-size: 13px;
+  color: rgba(255,215,0,0.8);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.ganadorInfo { font-size: 1.05rem; color: white; }
+
+.ganadorNum {
+  background: rgba(255,215,0,0.15);
+  color: #ffd700;
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-weight: 800;
+  font-family: monospace;
+}
+
+/* Actions */
+.actionsCard {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+
+.actionsTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+}
+
+.actionsRow {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Compradores section */
+.compradoresSection {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.compradoresHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-wrap: wrap;
+}
+
+.tabsRow {
+  display: flex;
+  gap: 4px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 4px;
+}
+
+.tab {
+  padding: 8px 16px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Outfit', sans-serif;
+  white-space: nowrap;
+}
+
+.tab:hover { color: white; }
+
+.tabActive {
+  background: rgba(255,255,255,0.08) !important;
+  color: white !important;
+}
+
+.gridWrapper {
+  padding: 20px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.listaWrapper {
+  overflow-x: auto;
+  min-height: 200px;
+}
+
+/* Table */
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.tabla thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.tabla tbody tr {
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.15s;
+}
+
+.tabla tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+.tabla tbody td {
+  padding: 12px 16px;
+  color: rgba(255,255,255,0.8);
+  vertical-align: middle;
+}
+
+.numBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  padding: 4px 0;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: white;
+  font-family: monospace;
+}
+
+.nombreCell { font-weight: 600; color: white; }
+
+.emailCell, .fechaCell {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+}
+
+/* Sorteo modal */
+.sorteoAnim {
+  font-size: 72px;
+  display: block;
+  margin-bottom: 16px;
+  animation: spin 1s ease-out, bounce 0.5s 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg) scale(0.5); opacity: 0; }
+  to { transform: rotate(360deg) scale(1); opacity: 1; }
+}
+
+@keyframes bounce {
+  from { transform: scale(0.8); }
+  to { transform: scale(1); }
+}
+
+.sorteoNum {
+  width: 120px;
+  height: 120px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: white;
+  margin: 0 auto 20px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  animation: popIn 0.5s 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.sorteoGanador {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+
+.sorteoGanadorLabel {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sorteoGanadorName {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #ffd700;
+}

@@ -1,0 +1,318 @@
+/* app/rifa/[id]/rifa.module.css */
+
+/* HERO */
+.hero {
+  position: relative;
+  padding: 100px 20px 60px;
+  overflow: hidden;
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.heroEmoji {
+  font-size: 64px;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.4));
+  animation: floatEmoji 4s ease-in-out infinite;
+}
+
+@keyframes floatEmoji {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.heroTitle {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 900;
+  color: white;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+  line-height: 1.2;
+}
+
+.heroPremio {
+  font-size: 1.2rem;
+  color: rgba(255,255,255,0.9);
+  font-weight: 600;
+}
+
+.heroBadges {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.heroBadge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 14px;
+  padding: 10px 16px;
+}
+
+.badgeIcon { font-size: 22px; }
+
+.badgeLabel {
+  font-size: 11px;
+  color: rgba(255,255,255,0.65);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badgeValue {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: white;
+}
+
+/* MAIN */
+.main {
+  padding: 32px 20px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1000px;
+}
+
+/* Progress */
+.progressCard {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.progressLabel {
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.progressSub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+}
+
+.progressPct {
+  font-size: 1.6rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #ffd700, #ff9800);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.progressLegend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+}
+
+.legendDot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* Descripción */
+.descripcion {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-left: 3px solid rgba(255,215,0,0.4);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 15px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.7;
+}
+
+/* Grid */
+.gridSection {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.gridHeader {
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.gridTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.gridSubtitle {
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+}
+
+.gridWrapper {
+  padding: 20px;
+  max-height: 520px;
+  overflow-y: auto;
+}
+
+/* Organizer */
+.orgCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 16px 20px;
+}
+
+.orgIcon { font-size: 28px; }
+
+.orgLabel {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.orgName {
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+}
+
+/* Modal */
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.modalTitle {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.modalNum {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: white;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.modalPrice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,215,0,0.08);
+  border: 1px solid rgba(255,215,0,0.2);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffd700;
+  margin-bottom: 16px;
+}
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.modalNote {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.modalActions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Success modal */
+.successModal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  padding: 8px 0;
+}
+
+.successIcon {
+  font-size: 64px;
+  animation: bounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes bounce {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+
+.numReservado {
+  width: 100px;
+  height: 100px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 900;
+  color: white;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.successModal h2 { font-size: 1.5rem; font-weight: 800; }
+.successModal p { color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1.6; }
