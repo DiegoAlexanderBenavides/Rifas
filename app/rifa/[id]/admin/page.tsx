@@ -23,7 +23,7 @@ export default function AdminRifaPage() {
   const [numeros, setNumeros] = useState<Numero[]>([]);
   const [loading, setLoading] = useState(true);
   const [sorteando, setSorteando] = useState(false);
-  const [ganador, setGanador] = useState<{ numero: number; nombre: string } | null>(null);
+  const [ganador, setGanador] = useState<{ ganadorNumero: number; ganadorNombre: string } | null>(null);
   const [showSorteoModal, setShowSorteoModal] = useState(false);
   const [tab, setTab] = useState<'grid' | 'lista'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
@@ -325,11 +325,11 @@ export default function AdminRifaPage() {
             <h2 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 8 }}>¡Tenemos un ganador!</h2>
             <p style={{ color: 'rgba(255,255,255,0.5)', marginBottom: 24 }}>El número ganador del sorteo es:</p>
             <div className={styles.sorteoNum} style={{ background: plantilla.gradiente }}>
-              {String(ganador.numero).padStart(3, '0')}
+              {String(ganador.ganadorNumero).padStart(3, '0')}
             </div>
             <div className={styles.sorteoGanador}>
               <span className={styles.sorteoGanadorLabel}>Ganador</span>
-              <span className={styles.sorteoGanadorName}>{ganador.nombre}</span>
+              <span className={styles.sorteoGanadorName}>{ganador.ganadorNombre}</span>
             </div>
             <button
               className="btn btn-accent btn-full"
