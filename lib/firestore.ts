@@ -11,7 +11,6 @@ import {
   where,
   orderBy,
   Timestamp,
-  increment,
   runTransaction,
 } from 'firebase/firestore';
 import { db } from './firebase';
@@ -106,18 +105,20 @@ export async function comprarNumero(
   rifaId: string,
   numero: Omit<Numero, 'id' | 'rifaId' | 'fechaCompra' | 'estado'>
 ): Promise<void> {
+  // Usar transacción solo para evitar números duplicados
   await runTransaction(db, async (transaction) => {
-    const rifaRef = doc(db, 'rifas', rifaId);
     const numeroRef = doc(db, 'rifas', rifaId, 'numeros', numero.numero.toString());
     const numeroSnap = await transaction.get(numeroRef);
-    if (numeroSnap.exists()) throw new Error('Este número ya fue comprado');
+    if (numeroSnap.exists()) throw new Error('Este número ya fue comprado. Por favor elige otro.');
     transaction.set(numeroRef, {
       ...numero,
       rifaId,
       estado: 'reservado',
       fechaCompra: Timestamp.now(),
     });
-    transaction.update(rifaRef, { numerosVendidos: increment(1) });
+    // NOTA: No actualizamos numerosVendidos aquí porque el comprador no
+    // tiene permisos de escritura en el documento padre de la rifa.
+    // El conteo real se obtiene de obtenerNumerosDeRifa().length
   });
 }
 
