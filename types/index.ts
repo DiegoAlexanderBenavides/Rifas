@@ -12,6 +12,7 @@ export interface Rifa {
   organizadorId: string;
   organizadorEmail: string;
   organizadorNombre: string;
+  telefonoOrganizador?: string;
   nombre: string;
   descripcion: string;
   premio: string;

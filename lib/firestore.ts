@@ -129,3 +129,13 @@ export async function obtenerNumerosDeRifa(rifaId: string): Promise<Numero[]> {
     fechaCompra: d.data().fechaCompra.toDate(),
   })) as Numero[];
 }
+
+export async function marcarComoPagado(rifaId: string, numero: number): Promise<void> {
+  const numeroRef = doc(db, 'rifas', rifaId, 'numeros', numero.toString());
+  await updateDoc(numeroRef, { estado: 'pagado' });
+}
+
+export async function marcarComoNoPagado(rifaId: string, numero: number): Promise<void> {
+  const numeroRef = doc(db, 'rifas', rifaId, 'numeros', numero.toString());
+  await updateDoc(numeroRef, { estado: 'reservado' });
+}

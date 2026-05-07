@@ -2,7 +2,7 @@
 // app/rifa/[id]/admin/page.tsx — Panel de administración
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { obtenerRifa, obtenerNumerosDeRifa, actualizarRifa, realizarSorteo } from '@/lib/firestore';
+import { obtenerRifa, obtenerNumerosDeRifa, actualizarRifa, realizarSorteo, marcarComoPagado } from '@/lib/firestore';
 import { useAuthContext } from '@/components/auth/AuthProvider';
 import NumeroGrid from '@/components/rifa/NumeroGrid';
 import { PLANTILLAS } from '@/types';
@@ -29,6 +29,8 @@ export default function AdminRifaPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [copySuccess, setCopySuccess] = useState(false);
   const [showNuevaAlert, setShowNuevaAlert] = useState(isNueva);
+  const [pagando, setPagando] = useState<Record<number, boolean>>({});
+  const [pagados, setPagados] = useState<Set<number>>(new Set());
 
   const loadData = useCallback(async () => {
     const [r, n] = await Promise.all([obtenerRifa(rifaId), obtenerNumerosDeRifa(rifaId)]);
@@ -78,6 +80,45 @@ export default function AdminRifaPage() {
       alert(e instanceof Error ? e.message : 'Error al realizar el sorteo');
     } finally {
       setSorteando(false);
+    }
+  };
+
+  const handleConfirmarPago = async (n: Numero) => {
+    if (!rifa) return;
+    if (!confirm(`¿Confirmar pago del número ${String(n.numero).padStart(3,'0')} para ${n.compradoPor}?`)) return;
+    setPagando((prev) => ({ ...prev, [n.numero]: true }));
+    try {
+      await marcarComoPagado(rifaId, n.numero);
+      setPagados((prev) => new Set([...prev, n.numero]));
+
+      // Si tiene email, enviar boleto
+      if (n.emailComprador) {
+        const plantillaData = PLANTILLAS.find((p) => p.id === rifa.plantillaId) || PLANTILLAS[0];
+        await fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tipo: 'boleto',
+            compradorEmail: n.emailComprador,
+            compradorNombre: n.compradoPor,
+            compradorContacto: n.contacto,
+            rifaNombre: rifa.nombre,
+            rifaId: rifaId,
+            premio: rifa.premio,
+            precio: rifa.precioPorNumero,
+            numero: n.numero,
+            organizadorNombre: rifa.organizadorNombre,
+            fechaLimite: new Date(rifa.fechaLimite).toLocaleDateString('es-CO', { day: '2-digit', month: 'long', year: 'numeric' }),
+            colorPrimario: plantillaData.colorPrimario,
+            colorAcento: plantillaData.colorAcento,
+            emoji: plantillaData.emoji,
+          }),
+        });
+      }
+    } catch (e) {
+      alert('Error al confirmar pago: ' + (e instanceof Error ? e.message : e));
+    } finally {
+      setPagando((prev) => ({ ...prev, [n.numero]: false }));
     }
   };
 
@@ -289,12 +330,15 @@ export default function AdminRifaPage() {
                       <th>Contacto</th>
                       <th>Email</th>
                       <th>Fecha</th>
+                      <th>Pago</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredNumeros
-                      .sort((a, b) => a.numero - b.numero)
-                      .map((n) => (
+                    .sort((a, b) => a.numero - b.numero)
+                      .map((n) => {
+                        const esPagado = pagados.has(n.numero) || n.estado === 'pagado';
+                        return (
                         <tr key={n.id}>
                           <td>
                             <span className={styles.numBadge} style={{ background: plantilla.colorPrimario }}>
@@ -307,8 +351,23 @@ export default function AdminRifaPage() {
                           <td className={styles.fechaCell}>
                             {new Date(n.fechaCompra).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
                           </td>
+                          <td>
+                            {esPagado ? (
+                              <span style={{ color: '#69f0ae', fontSize: 13, fontWeight: 700 }}>✅ Pagado</span>
+                            ) : (
+                              <button
+                                className="btn btn-sm"
+                                style={{ background: '#25d366', color: '#fff', border: 'none', fontSize: 12 }}
+                                onClick={() => handleConfirmarPago(n)}
+                                disabled={pagando[n.numero]}
+                              >
+                                {pagando[n.numero] ? '...' : '💳 Confirmar pago'}
+                              </button>
+                            )}
+                          </td>
                         </tr>
-                      ))}
+                        );
+                      })}
                   </tbody>
                 </table>
               )}

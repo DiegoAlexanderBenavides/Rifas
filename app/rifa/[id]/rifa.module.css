@@ -316,3 +316,21 @@
 
 .successModal h2 { font-size: 1.5rem; font-weight: 800; }
 .successModal p { color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1.6; }
+
+.successInfo {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.5;
+  width: 100%;
+  text-align: left;
+}
+
+.successInfo span { font-size: 18px; flex-shrink: 0; }
+.successInfo p { margin: 0; }

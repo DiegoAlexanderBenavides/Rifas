@@ -22,6 +22,7 @@ export default function RifaPublicaPage() {
   const [numeros, setNumeros] = useState<Numero[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedNum, setSelectedNum] = useState<number | null>(null);
+  const [reservadoNum, setReservadoNum] = useState<number | null>(null);
   const [form, setForm] = useState<CompraForm>({ nombre: '', contacto: '', email: '' });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -30,10 +31,7 @@ export default function RifaPublicaPage() {
 
   useEffect(() => {
     Promise.all([obtenerRifa(rifaId), obtenerNumerosDeRifa(rifaId)])
-      .then(([r, n]) => {
-        setRifa(r);
-        setNumeros(n);
-      })
+      .then(([r, n]) => { setRifa(r); setNumeros(n); })
       .finally(() => setLoading(false));
   }, [rifaId]);
 
@@ -51,7 +49,8 @@ export default function RifaPublicaPage() {
 
   const handleComprar = async () => {
     if (!form.nombre.trim()) { setError('Tu nombre es obligatorio'); return; }
-    if (!form.contacto.trim()) { setError('Tu número de contacto es obligatorio'); return; }
+    if (!form.contacto.trim()) { setError('Tu número de WhatsApp/teléfono es obligatorio'); return; }
+    if (!form.email.trim()) { setError('Tu email es obligatorio para enviarte la confirmación'); return; }
     if (!selectedNum || !rifa) return;
 
     setSubmitting(true);
@@ -64,34 +63,48 @@ export default function RifaPublicaPage() {
         emailComprador: form.email.trim(),
       });
 
-      // Reload numeros
       const updatedNumeros = await obtenerNumerosDeRifa(rifaId);
       setNumeros(updatedNumeros);
+      setReservadoNum(selectedNum);
 
-      // Send email notification to organizer
-      try {
-        await fetch('/api/send-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            toEmail: rifa.organizadorEmail,
-            organizadorNombre: rifa.organizadorNombre,
-            rifaNombre: rifa.nombre,
-            compradorNombre: form.nombre.trim(),
-            compradorContacto: form.contacto.trim(),
-            compradorEmail: form.email.trim(),
-            numero: selectedNum,
-          }),
-        });
-      } catch {
-        // Email failure is non-critical
-      }
+      // Email al ORGANIZADOR
+      fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tipo: 'organizador',
+          toEmail: rifa.organizadorEmail,
+          organizadorNombre: rifa.organizadorNombre,
+          rifaNombre: rifa.nombre,
+          compradorNombre: form.nombre.trim(),
+          compradorContacto: form.contacto.trim(),
+          compradorEmail: form.email.trim(),
+          numero: selectedNum,
+        }),
+      }).catch(() => {});
+
+      // Email al COMPRADOR (confirmación de reserva)
+      fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tipo: 'comprador',
+          compradorEmail: form.email.trim(),
+          compradorNombre: form.nombre.trim(),
+          compradorContacto: form.contacto.trim(),
+          rifaNombre: rifa.nombre,
+          premio: rifa.premio,
+          precio: rifa.precioPorNumero,
+          numero: selectedNum,
+          organizadorNombre: rifa.organizadorNombre,
+          telefonoOrganizador: rifa.telefonoOrganizador || '',
+        }),
+      }).catch(() => {});
 
       setSuccess(true);
       setSelectedNum(null);
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : 'Error al reservar el número';
-      setError(msg);
+      setError(e instanceof Error ? e.message : 'Error al reservar el número');
     } finally {
       setSubmitting(false);
     }
@@ -103,6 +116,13 @@ export default function RifaPublicaPage() {
     setError('');
     setSuccess(false);
   };
+
+  // Link de WhatsApp para contactar al organizador
+  const waLink = rifa?.telefonoOrganizador
+    ? `https://wa.me/${rifa.telefonoOrganizador.replace(/\D/g, '')}?text=${encodeURIComponent(
+        `Hola, soy ${form.nombre || 'un participante'} y reservé el número ${String(reservadoNum).padStart(3,'0')} en tu rifa "${rifa?.nombre}". ¿Cómo confirmo el pago?`
+      )}`
+    : null;
 
   if (loading) {
     return (
@@ -126,7 +146,7 @@ export default function RifaPublicaPage() {
 
   return (
     <div className="page-wrapper">
-      {/* Hero Header con la plantilla */}
+      {/* Hero */}
       <div className={styles.hero} style={{ background: plantilla.gradiente }}>
         <div className={styles.heroBg} />
         <div className={styles.heroContent}>
@@ -180,21 +200,17 @@ export default function RifaPublicaPage() {
           </div>
         </div>
 
-        {/* Estado banner */}
         {rifa.estado !== 'activa' && (
           <div className={`alert ${rifa.estado === 'sorteada' ? 'alert-warning' : 'alert-danger'}`}>
             {rifa.estado === 'cerrada' ? '🔒 Esta rifa está cerrada' : `🏆 ¡Rifa sorteada! Ganador: ${rifa.ganadorNombre} — Número ${String(rifa.ganadorNumero).padStart(3,'0')}`}
           </div>
         )}
 
-        {/* Descripción */}
         {rifa.descripcion && (
-          <div className={styles.descripcion}>
-            <p>{rifa.descripcion}</p>
-          </div>
+          <div className={styles.descripcion}><p>{rifa.descripcion}</p></div>
         )}
 
-        {/* Grid de números */}
+        {/* Grid */}
         <div className={styles.gridSection}>
           <div className={styles.gridHeader}>
             <h2 className={styles.gridTitle}>Selecciona tu número</h2>
@@ -220,10 +236,21 @@ export default function RifaPublicaPage() {
             <div className={styles.orgLabel}>Organizado por</div>
             <div className={styles.orgName}>{rifa.organizadorNombre}</div>
           </div>
+          {rifa.telefonoOrganizador && (
+            <a
+              href={`https://wa.me/${rifa.telefonoOrganizador.replace(/\D/g,'')}`}
+              className="btn btn-primary btn-sm"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ marginLeft: 'auto', background: '#25d366', borderColor: '#25d366' }}
+            >
+              💬 WhatsApp
+            </a>
+          )}
         </div>
       </div>
 
-      {/* Modal de compra */}
+      {/* Modal */}
       {showModal && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -232,10 +259,27 @@ export default function RifaPublicaPage() {
                 <span className={styles.successIcon}>🎉</span>
                 <h2>¡Número reservado!</h2>
                 <div className={styles.numReservado} style={{ background: plantilla.gradiente }}>
-                  {String(selectedNum || 0).padStart(rifa.cantidadNumeros > 99 ? 3 : 2, '0')}
+                  {String(reservadoNum || 0).padStart(rifa.cantidadNumeros > 99 ? 3 : 2, '0')}
                 </div>
-                <p>Tu número fue reservado exitosamente. El organizador se comunicará contigo para confirmar el pago.</p>
-                <button className="btn btn-accent btn-full" onClick={closeModal}>¡Perfecto!</button>
+
+                {/* Confirmación email */}
+                <div className={styles.successInfo}>
+                  <span>📧</span>
+                  <p>Te enviamos un email de confirmación con los detalles de tu reserva.</p>
+                </div>
+
+                {/* WhatsApp para pagar */}
+                {waLink ? (
+                  <a href={waLink} className="btn btn-full" style={{ background: '#25d366', color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }} target="_blank" rel="noopener noreferrer">
+                    💬 Confirmar pago por WhatsApp
+                  </a>
+                ) : (
+                  <div className={styles.modalNote}>
+                    Contacta al organizador <strong>{rifa.organizadorNombre}</strong> para confirmar el pago.
+                  </div>
+                )}
+
+                <button className="btn btn-ghost btn-full" onClick={closeModal}>Cerrar</button>
               </div>
             ) : (
               <>
@@ -254,53 +298,31 @@ export default function RifaPublicaPage() {
                 <div className={styles.modalForm}>
                   <div className="form-group">
                     <label className="form-label">Nombre completo *</label>
-                    <input
-                      id="compra-nombre"
-                      className="form-input"
-                      placeholder="Tu nombre completo"
-                      value={form.nombre}
-                      onChange={(e) => setForm((f) => ({ ...f, nombre: e.target.value }))}
-                    />
+                    <input id="compra-nombre" className="form-input" placeholder="Tu nombre completo"
+                      value={form.nombre} onChange={(e) => setForm((f) => ({ ...f, nombre: e.target.value }))} />
                   </div>
                   <div className="form-group">
                     <label className="form-label">WhatsApp / Teléfono *</label>
-                    <input
-                      id="compra-contacto"
-                      className="form-input"
-                      placeholder="Ej: 3001234567"
-                      value={form.contacto}
-                      onChange={(e) => setForm((f) => ({ ...f, contacto: e.target.value }))}
-                      type="tel"
-                    />
+                    <input id="compra-contacto" className="form-input" placeholder="Ej: 3001234567"
+                      value={form.contacto} onChange={(e) => setForm((f) => ({ ...f, contacto: e.target.value }))} type="tel" />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Email (opcional)</label>
-                    <input
-                      id="compra-email"
-                      className="form-input"
-                      placeholder="tu@email.com"
-                      value={form.email}
-                      onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-                      type="email"
-                    />
+                    <label className="form-label">Email * <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontWeight: 400 }}>(para enviarte tu confirmación y boleto)</span></label>
+                    <input id="compra-email" className="form-input" placeholder="tu@email.com"
+                      value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} type="email" />
                   </div>
                 </div>
 
                 {error && <div className="alert alert-danger">⚠️ {error}</div>}
 
                 <div className={styles.modalNote}>
-                  ℹ️ Tu número quedará <strong>reservado</strong>. El organizador confirmará el pago contigo directamente.
+                  📧 Te enviaremos un email de confirmación y tu boleto oficial cuando confirmes el pago.
                 </div>
 
                 <div className={styles.modalActions}>
                   <button className="btn btn-ghost" onClick={closeModal}>Cancelar</button>
-                  <button
-                    id="btn-confirmar-compra"
-                    className="btn btn-accent"
-                    style={{ flex: 1 }}
-                    onClick={handleComprar}
-                    disabled={submitting}
-                  >
+                  <button id="btn-confirmar-compra" className="btn btn-accent" style={{ flex: 1 }}
+                    onClick={handleComprar} disabled={submitting}>
                     {submitting ? <><span className="spinner" /> Reservando...</> : '✅ Confirmar reserva'}
                   </button>
                 </div>

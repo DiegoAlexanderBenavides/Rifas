@@ -18,6 +18,7 @@ interface FormData {
   precioPorNumero: string;
   cantidadNumeros: number;
   fechaLimite: string;
+  telefonoOrganizador: string;
 }
 
 const DEFAULT: FormData = {
@@ -28,6 +29,7 @@ const DEFAULT: FormData = {
   precioPorNumero: '',
   cantidadNumeros: 100,
   fechaLimite: '',
+  telefonoOrganizador: '',
 };
 
 export default function CrearRifaPage() {
@@ -73,6 +75,7 @@ export default function CrearRifaPage() {
         organizadorId: user.uid,
         organizadorEmail: user.email!,
         organizadorNombre: user.displayName || user.email!,
+        telefonoOrganizador: form.telefonoOrganizador.trim(),
         nombre: form.nombre.trim(),
         descripcion: form.descripcion.trim(),
         premio: form.premio.trim(),
@@ -206,6 +209,20 @@ export default function CrearRifaPage() {
                   />
                   <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', textAlign: 'right' }}>
                     {form.descripcion.length}/500
+                  </span>
+                </div>
+                <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                  <label className="form-label">📱 Tu número de WhatsApp (para pagos)</label>
+                  <input
+                    id="rifa-telefono"
+                    className="form-input"
+                    type="tel"
+                    placeholder="Ej: 573001234567 (con código de país)"
+                    value={form.telefonoOrganizador}
+                    onChange={(e) => set('telefonoOrganizador', e.target.value)}
+                  />
+                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>
+                    💡 Los compradores podrán enviarte un WhatsApp directo para confirmar el pago
                   </span>
                 </div>
               </div>
