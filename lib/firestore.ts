@@ -46,31 +46,34 @@ export async function obtenerRifa(id: string): Promise<Rifa | null> {
 export async function obtenerRifasDeUsuario(uid: string): Promise<Rifa[]> {
   const q = query(
     collection(db, 'rifas'),
-    where('organizadorId', '==', uid),
-    orderBy('createdAt', 'desc')
+    where('organizadorId', '==', uid)
+    // Nota: sin orderBy para evitar requerir índice compuesto en Firestore
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({
+  const rifas = snapshot.docs.map((d) => ({
     ...d.data(),
     id: d.id,
     fechaLimite: d.data().fechaLimite.toDate(),
     createdAt: d.data().createdAt.toDate(),
   })) as Rifa[];
+  // Ordenar por fecha de creación descendente en el cliente
+  return rifas.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 }
 
 export async function obtenerRifasPublicas(): Promise<Rifa[]> {
   const q = query(
     collection(db, 'rifas'),
-    where('estado', '==', 'activa'),
-    orderBy('createdAt', 'desc')
+    where('estado', '==', 'activa')
+    // Sin orderBy para evitar índice compuesto
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({
+  const rifas = snapshot.docs.map((d) => ({
     ...d.data(),
     id: d.id,
     fechaLimite: d.data().fechaLimite.toDate(),
     createdAt: d.data().createdAt.toDate(),
   })) as Rifa[];
+  return rifas.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 }
 
 export async function actualizarRifa(id: string, data: Partial<Rifa>): Promise<void> {

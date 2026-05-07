@@ -78,12 +78,18 @@ export default function DashboardPage() {
   const router = useRouter();
   const [rifas, setRifas] = useState<Rifa[]>([]);
   const [loadingRifas, setLoadingRifas] = useState(true);
+  const [errorCarga, setErrorCarga] = useState('');
 
   useEffect(() => {
     if (!loading && !user) { router.push('/login'); return; }
     if (user) {
+      setErrorCarga('');
       obtenerRifasDeUsuario(user.uid)
         .then(setRifas)
+        .catch((err) => {
+          console.error('Error cargando rifas:', err);
+          setErrorCarga('No se pudieron cargar tus rifas. Verifica tu conexión o la configuración de Firebase.');
+        })
         .finally(() => setLoadingRifas(false));
     }
   }, [user, loading, router]);
@@ -96,6 +102,23 @@ export default function DashboardPage() {
         <div className="loading-logo">🎯</div>
         <div className="spinner" style={{ width: 30, height: 30, borderWidth: 3 }} />
         <p style={{ color: 'rgba(255,255,255,0.5)', marginTop: 8 }}>Cargando tus rifas...</p>
+      </div>
+    );
+  }
+
+  if (errorCarga) {
+    return (
+      <div className="loading-screen">
+        <span style={{ fontSize: 48 }}>⚠️</span>
+        <h2 style={{ color: '#ff8a80', fontSize: '1.3rem', textAlign: 'center', padding: '0 20px' }}>
+          Error de conexión con Firebase
+        </h2>
+        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, textAlign: 'center', maxWidth: 400, padding: '0 20px' }}>
+          {errorCarga}
+        </p>
+        <button className="btn btn-primary" onClick={() => window.location.reload()}>
+          🔄 Reintentar
+        </button>
       </div>
     );
   }
